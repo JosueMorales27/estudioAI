@@ -396,8 +396,10 @@ def _sadtalker_run(imagen, wav, out_file, job=None):
     sad = os.path.join(LIPSYNC_DIR, "SadTalker")
     resdir = os.path.join(LIPSYNC_DIR, "_out", uuid.uuid4().hex)
     os.makedirs(resdir, exist_ok=True)
+    # 512 + realce GFPGAN = rostro nitido (no borroso). --still = sin saltos de cabeza.
     cmd = [LIPSYNC_PY, "inference.py", "--driven_audio", wav, "--source_image", imagen,
-           "--result_dir", resdir, "--still", "--preprocess", "full", "--size", "256"]
+           "--result_dir", resdir, "--still", "--preprocess", "full", "--size", "512",
+           "--enhancer", "gfpgan"]
     try:
         p = subprocess.run(cmd, cwd=sad, capture_output=True, text=True, timeout=1200)
     except Exception as e:
