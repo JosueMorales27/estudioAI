@@ -33,3 +33,13 @@ env/
 *.avi
 *.mov
 *.mkv
+
+# Entorno aislado de lip-sync (pesado: python + torch + modelos). Solo
+# versionamos los scripts chicos (setup + engine.json), no los GB.
+lipsync/python/
+lipsync/SadTalker/
+lipsync/Wav2Lip/
+lipsync/_out/
+lipsync/*.tar.gz
+lipsync/setup_log.txt
+lipsync/_import_test.py

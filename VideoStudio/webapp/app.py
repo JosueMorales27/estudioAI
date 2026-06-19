@@ -365,21 +365,81 @@ def generar_clip_ltx(prompt, segundos, imagen_guia, out_file, job=None):
         g["11"]={"class_type":"VAEDecode","inputs":{"samples":["10",0],"vae":["1",2]}}
     return comfy_run(g, "estudio_web", (".mp4",), out_file, timeout=600, job=job)
 
-# ---------------- LIP-SYNC (rostro habla) ----------------
-SADTALKER_NODOS = ("SadTalker", "SadTalkerNode", "FromSadTalker")
+# ---------------- LIP-SYNC (rostro habla) -- entorno AISLADO en C:\AI\lipsync ----
+LIPSYNC_DIR = r"C:\AI\lipsync"
+LIPSYNC_PY  = os.path.join(LIPSYNC_DIR, "python", "python.exe")
+LIPSYNC_CFG = os.path.join(LIPSYNC_DIR, "engine.json")   # {"engine":"sadtalker"|"wav2lip"}
+
+def lipsync_engine():
+    """Motor de lip-sync instalado en el entorno aislado, o None."""
+    try:
+        if os.path.exists(LIPSYNC_CFG):
+            return (json.load(open(LIPSYNC_CFG, encoding="utf-8")).get("engine") or None)
+    except Exception:
+        pass
+    return None
 
 def lipsync_disponible():
-    return comfy_tiene_nodo(*SADTALKER_NODOS)
+    return bool(lipsync_engine()) and os.path.exists(LIPSYNC_PY)
+
+def _mp3_a_wav(mp3, wav):
+    return run(["ffmpeg","-y","-i",mp3,"-ar","16000","-ac","1",wav])[0]
+
+def _buscar_mp4(carpeta):
+    res = []
+    for root,_,files in os.walk(carpeta):
+        for f in files:
+            if f.lower().endswith(".mp4"): res.append(os.path.join(root,f))
+    return res
+
+def _sadtalker_run(imagen, wav, out_file, job=None):
+    sad = os.path.join(LIPSYNC_DIR, "SadTalker")
+    resdir = os.path.join(LIPSYNC_DIR, "_out", uuid.uuid4().hex)
+    os.makedirs(resdir, exist_ok=True)
+    cmd = [LIPSYNC_PY, "inference.py", "--driven_audio", wav, "--source_image", imagen,
+           "--result_dir", resdir, "--still", "--preprocess", "full", "--size", "256"]
+    try:
+        p = subprocess.run(cmd, cwd=sad, capture_output=True, text=True, timeout=1200)
+    except Exception as e:
+        if job: log(job, f"  (SadTalker no corrio: {e})"); return None
+    mp4s = _buscar_mp4(resdir)
+    if not mp4s:
+        if job: log(job, "  (SadTalker sin salida) " + (p.stderr or "")[-200:])
+        return None
+    shutil.copy(max(mp4s, key=os.path.getmtime), out_file)
+    return out_file
+
+def _wav2lip_run(imagen, wav, out_file, job=None):
+    """Wav2Lip necesita un video/imagen + audio. Corre el inference del entorno aislado."""
+    w2l = os.path.join(LIPSYNC_DIR, "Wav2Lip")
+    ckpt = os.path.join(w2l, "checkpoints", "wav2lip_gan.pth")
+    if not os.path.exists(ckpt): return None
+    try:
+        p = subprocess.run([LIPSYNC_PY, "inference.py", "--checkpoint_path", ckpt,
+                            "--face", imagen, "--audio", wav, "--outfile", out_file],
+                           cwd=w2l, capture_output=True, text=True, timeout=1200)
+    except Exception as e:
+        if job: log(job, f"  (Wav2Lip no corrio: {e})"); return None
+    if not os.path.exists(out_file):
+        if job: log(job, "  (Wav2Lip sin salida) " + (p.stderr or "")[-200:])
+        return None
+    return out_file
 
 def generar_talking_head(imagen, voz_mp3, out_file, job=None):
-    """Hace que el ROSTRO de 'imagen' mueva los labios con 'voz_mp3' (SadTalker).
-    Devuelve un mp4 (con audio) o None si el motor no esta instalado todavia.
-    NOTA: el grafo exacto se completa en la fase de instalacion de SadTalker."""
-    if not lipsync_disponible():
+    """Hace que el ROSTRO de 'imagen' mueva los labios con 'voz_mp3'.
+    Usa el motor del entorno AISLADO (SadTalker o Wav2Lip). El mp4 sale CON audio.
+    Devuelve out_file o None (entonces el pipeline cae a movimiento normal)."""
+    eng = lipsync_engine()
+    if not eng or not os.path.exists(LIPSYNC_PY):
         return None
-    # TODO (fase lip-sync): construir el grafo con los nodos de SadTalker ya
-    # instalados (cargar imagen + audio -> video). Hasta entonces, devolvemos None
-    # y el pipeline cae a movimiento normal para no dejar al usuario sin video.
+    wav = out_file + ".wav"
+    if not _mp3_a_wav(voz_mp3, wav):
+        return None
+    try:
+        if eng == "sadtalker": return _sadtalker_run(imagen, wav, out_file, job)
+        if eng == "wav2lip":   return _wav2lip_run(imagen, wav, out_file, job)
+    except Exception as e:
+        if job: log(job, f"  (lip-sync error: {e})")
     return None
 
 # ---------------- Ken Burns (respaldo si la GPU esta apagada) ----------------
@@ -632,7 +692,7 @@ def api_estado_motores():
     return jsonify({
         "comfy": comfy_vivo(),
         "sdxl": sdxl_listo(),
-        "lipsync": (lipsync_disponible() if comfy_vivo() else False),
+        "lipsync": lipsync_disponible(),
     })
 
 @app.route("/api/genimg", methods=["POST"])
