@@ -1,0 +1,1 @@
+{"engine": "sadtalker", "instalado": "2026-06-19", "python": "3.10.15", "torch": "2.0.1+cu118", "nota": "Entorno aislado; no toca ComfyUI. inference.py en SadTalker/."}
