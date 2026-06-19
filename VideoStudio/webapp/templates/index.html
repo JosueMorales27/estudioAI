@@ -3,259 +3,295 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🎬 Estudio de Video IA — Local</title>
+<title>🎬 Estudio de Video IA — Escenas</title>
 <style>
   :root{
-    --bg:#0b0d12; --bg2:#0f1320; --panel:#161a24; --panel2:#1d2230; --line:#2a3040;
+    --bg:#0b0d12; --panel:#161a24; --panel2:#1d2230; --line:#2a3040;
     --acc:#10a37f; --acc2:#19c2a0; --vio:#7c5cff; --txt:#eef1f6; --mut:#8b93a3;
-    --shadow:0 10px 40px rgba(0,0,0,.45);
+    --shadow:0 10px 40px rgba(0,0,0,.45); --bad:#e0556b; --warn:#f0b542;
   }
   *{box-sizing:border-box}
-  html,body{height:100%}
-  body{margin:0;font-family:'Segoe UI',system-ui,sans-serif;color:var(--txt);
+  body{margin:0;font-family:'Segoe UI',system-ui,sans-serif;color:var(--txt);min-height:100vh;
     background:radial-gradient(1200px 700px at 80% -10%,rgba(124,92,255,.16),transparent 60%),
-               radial-gradient(900px 600px at 0% 110%,rgba(16,163,127,.16),transparent 55%),
-               var(--bg);
-    display:flex;flex-direction:column;overflow:hidden}
-  /* ---------- header ---------- */
-  header{padding:14px 22px;display:flex;align-items:center;gap:12px;
-    background:linear-gradient(180deg,rgba(22,26,36,.95),rgba(22,26,36,.6));
-    border-bottom:1px solid var(--line);backdrop-filter:blur(8px);z-index:5}
+               radial-gradient(900px 600px at 0% 110%,rgba(16,163,127,.16),transparent 55%),var(--bg)}
+  header{padding:14px 22px;display:flex;align-items:center;gap:12px;position:sticky;top:0;z-index:20;
+    background:linear-gradient(180deg,rgba(22,26,36,.97),rgba(22,26,36,.82));
+    border-bottom:1px solid var(--line);backdrop-filter:blur(8px)}
   .logo{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;
     font-size:19px;background:linear-gradient(135deg,var(--acc),var(--vio));box-shadow:var(--shadow)}
-  header h1{font-size:16px;margin:0;font-weight:700;letter-spacing:.2px}
+  header h1{font-size:16px;margin:0;font-weight:700}
   header h1 small{font-weight:500;color:var(--mut);font-size:12px;margin-left:6px}
-  .badge{font-size:11px;color:#0b0d12;background:linear-gradient(135deg,var(--acc2),var(--acc));
-    padding:3px 10px;border-radius:20px;font-weight:700}
-  .sub{font-size:11px;color:var(--mut);margin-left:auto;text-align:right;line-height:1.4}
-  /* ---------- chat ---------- */
-  #chat{flex:1;overflow-y:auto;padding:26px 16px 10px;display:flex;flex-direction:column;gap:18px;
-    max-width:860px;width:100%;margin:0 auto}
-  #chat::-webkit-scrollbar{width:10px}#chat::-webkit-scrollbar-thumb{background:#283041;border-radius:8px}
-  .msg{display:flex;gap:12px;animation:fade .35s ease}
-  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1}}
-  .av{width:32px;height:32px;border-radius:9px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:17px}
-  .user .av{background:#2b3242}
-  .bot .av{background:linear-gradient(135deg,var(--acc),var(--vio))}
-  .bub{background:var(--panel);padding:13px 16px;border-radius:13px;line-height:1.55;font-size:14.5px;
-    white-space:pre-wrap;word-break:break-word;box-shadow:var(--shadow);border:1px solid var(--line);max-width:100%}
-  .user .bub{background:var(--panel2)}
-  .bub img.ref{height:64px;border-radius:9px;margin:8px 6px 0 0;display:inline-block;vertical-align:top;border:1px solid var(--line)}
-  video{width:100%;max-width:320px;border-radius:13px;margin-top:12px;background:#000;box-shadow:var(--shadow)}
-  .vertical video{max-width:300px}.cuadrado video{max-width:340px}.horizontal video{max-width:460px}
-  .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-  .pill{display:inline-flex;align-items:center;gap:7px;color:#fff;text-decoration:none;font-size:13px;font-weight:600;
-    padding:8px 14px;border-radius:9px;border:none;cursor:pointer}
-  .pill.dl{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#06140f}
-  .pill.fold{background:#2b3242;color:var(--txt)}
-  .pill:hover{filter:brightness(1.08)}
-  .prog{font-size:13.5px;color:var(--mut)}
-  .bar{height:7px;background:#222838;border-radius:6px;overflow:hidden;margin:10px 0 6px}
-  .bar>i{display:block;height:100%;width:0;border-radius:6px;
-    background:linear-gradient(90deg,var(--acc),var(--vio));transition:width .5s ease}
-  .logline{font-size:13px;color:var(--mut);margin-top:3px}
-  .spin{display:inline-block;width:13px;height:13px;border:2px solid #333b4d;border-top-color:var(--acc2);
-    border-radius:50%;animation:sp .9s linear infinite;margin-right:7px;vertical-align:-2px}
-  @keyframes sp{to{transform:rotate(360deg)}}
-  /* ---------- composer ---------- */
-  footer{padding:12px 16px 18px}
-  .inwrap{max-width:860px;margin:0 auto;background:var(--panel2);border:1px solid var(--line);
-    border-radius:18px;padding:12px 14px;box-shadow:var(--shadow);transition:border .2s,box-shadow .2s}
-  .inwrap.drag{border-color:var(--acc2);box-shadow:0 0 0 3px rgba(25,194,160,.25)}
-  textarea{width:100%;background:transparent;border:none;color:var(--txt);resize:none;font-size:15px;
-    font-family:inherit;outline:none;max-height:180px;line-height:1.5}
-  textarea::placeholder{color:#6b7384}
-  /* thumbs estilo ChatGPT */
-  #thumbs{display:flex;gap:10px;flex-wrap:wrap;margin:10px 2px 4px}
-  .thumb{position:relative;width:62px;height:62px;border-radius:11px;overflow:hidden;border:1px solid var(--line);
-    background:#000;animation:fade .25s ease;cursor:grab}
-  .thumb img{width:100%;height:100%;object-fit:cover;display:block}
-  .thumb .n{position:absolute;top:3px;left:3px;background:var(--acc);color:#06140f;font-size:11px;font-weight:800;
-    width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,.5)}
-  .thumb .x{position:absolute;top:3px;right:3px;background:rgba(0,0,0,.65);color:#fff;width:18px;height:18px;
-    border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;line-height:1}
-  .thumb .x:hover{background:#e0556b}
-  .thumb.dragging{opacity:.4}
-  .row{display:flex;align-items:center;gap:9px;margin-top:8px;flex-wrap:wrap}
-  .tool{background:#2b3242;border:1px solid #333b4d;color:var(--txt);padding:8px 12px;border-radius:10px;
-    cursor:pointer;font-size:13px;display:flex;align-items:center;gap:7px;transition:.15s}
-  .tool:hover{background:#353d4f;border-color:#3f4860}
-  select{background:#2b3242;border:1px solid #333b4d;color:var(--txt);padding:8px 9px;border-radius:10px;font-size:13px;cursor:pointer;outline:none}
-  .seg{display:flex;background:#2b3242;border:1px solid #333b4d;border-radius:10px;overflow:hidden}
-  .seg button{background:transparent;border:none;color:var(--mut);padding:8px 11px;font-size:13px;cursor:pointer;display:flex;gap:6px;align-items:center}
+  .badge{font-size:11px;color:#0b0d12;background:linear-gradient(135deg,var(--acc2),var(--acc));padding:3px 10px;border-radius:20px;font-weight:700}
+  #motores{margin-left:auto;display:flex;gap:7px;font-size:11px}
+  .chip{padding:3px 9px;border-radius:20px;border:1px solid var(--line);background:#11151f;color:var(--mut);display:flex;gap:5px;align-items:center}
+  .chip.ok{color:var(--acc2);border-color:rgba(25,194,160,.4)}
+  .chip.no{color:var(--warn);border-color:rgba(240,181,66,.35)}
+  .wrap{max-width:920px;margin:0 auto;padding:22px 16px 40px}
+  .intro{color:var(--mut);font-size:13.5px;line-height:1.6;margin:0 0 18px;background:var(--panel);
+    border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+  .intro b{color:var(--txt)}
+  /* ---- escena ---- */
+  .scene{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:16px;box-shadow:var(--shadow);position:relative}
+  .scene .head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+  .scene .num{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--acc),var(--vio));
+    color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+  .scene .ttl{font-weight:700;font-size:14.5px}
+  .scene .del{margin-left:auto;background:#2b3242;border:1px solid var(--line);color:var(--mut);
+    width:28px;height:28px;border-radius:8px;cursor:pointer;font-size:15px}
+  .scene .del:hover{background:var(--bad);color:#fff;border-color:var(--bad)}
+  .grid{display:grid;grid-template-columns:200px 1fr;gap:14px}
+  @media(max-width:620px){.grid{grid-template-columns:1fr}}
+  /* imagen */
+  .imgbox{display:flex;flex-direction:column;gap:8px}
+  .tabs{display:flex;background:#2b3242;border:1px solid var(--line);border-radius:9px;overflow:hidden}
+  .tabs button{flex:1;background:transparent;border:none;color:var(--mut);padding:7px 4px;font-size:12px;cursor:pointer}
+  .tabs button.on{background:linear-gradient(135deg,var(--acc),var(--vio));color:#fff;font-weight:700}
+  .drop{border:1.5px dashed #3a4255;border-radius:11px;aspect-ratio:9/16;display:flex;align-items:center;justify-content:center;
+    text-align:center;color:var(--mut);font-size:12px;cursor:pointer;overflow:hidden;background:#10141e;position:relative}
+  .drop.sq{aspect-ratio:1/1}.drop.wide{aspect-ratio:16/9}
+  .drop img{width:100%;height:100%;object-fit:cover}
+  .drop.has{border-style:solid;border-color:var(--acc)}
+  .drop .ld{position:absolute;inset:0;background:rgba(11,13,18,.78);display:flex;flex-direction:column;gap:8px;align-items:center;justify-content:center;font-size:12px}
+  .genrow{display:flex;flex-direction:column;gap:6px}
+  /* campos */
+  .fld label{display:block;font-size:12px;color:var(--mut);margin:0 0 4px}
+  .fld{margin-bottom:11px}
+  textarea,input[type=text]{width:100%;background:#11151f;border:1px solid var(--line);color:var(--txt);
+    border-radius:9px;padding:9px 11px;font-size:13.5px;font-family:inherit;resize:vertical;outline:none}
+  textarea:focus,input:focus{border-color:var(--acc2)}
+  .animseg{display:flex;gap:8px;margin-bottom:11px}
+  .animseg button{flex:1;background:#2b3242;border:1px solid var(--line);color:var(--mut);padding:9px;border-radius:9px;cursor:pointer;font-size:13px}
+  .animseg button.on{background:linear-gradient(135deg,var(--acc),var(--vio));color:#fff;font-weight:700;border-color:transparent}
+  .mini{background:#2b3242;border:1px solid var(--line);color:var(--txt);padding:8px 11px;border-radius:9px;cursor:pointer;font-size:12.5px}
+  .mini:hover{background:#353d4f}
+  .addscene{width:100%;background:#161a24;border:1.5px dashed #3a4255;color:var(--acc2);padding:14px;border-radius:14px;
+    cursor:pointer;font-size:14px;font-weight:700;margin-bottom:18px}
+  .addscene:hover{border-color:var(--acc2);background:#19202c}
+  /* barra global */
+  .globalbox{background:var(--panel2);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow)}
+  .globalbox h3{margin:0 0 4px;font-size:14px}
+  .globalbox p{margin:0 0 10px;font-size:12px;color:var(--mut)}
+  .ctrls{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:14px}
+  .seg{display:flex;background:#2b3242;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  .seg button{background:transparent;border:none;color:var(--mut);padding:8px 11px;font-size:13px;cursor:pointer}
   .seg button.on{background:linear-gradient(135deg,var(--acc),var(--vio));color:#fff;font-weight:700}
-  .count{font-size:12.5px;color:var(--mut);margin-left:auto;text-align:right}
-  #send{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#06140f;font-weight:800;
-    border:none;padding:9px 16px;border-radius:11px;cursor:pointer;font-size:14px;display:flex;gap:7px;align-items:center}
-  #send:disabled{opacity:.45;cursor:not-allowed}
-  .hint{font-size:11.5px;color:var(--mut);text-align:center;margin-top:10px}
-  .hint b{color:#aeb6c4}
+  select{background:#2b3242;border:1px solid var(--line);color:var(--txt);padding:9px;border-radius:10px;font-size:13px;cursor:pointer;outline:none}
+  #go{margin-left:auto;background:linear-gradient(135deg,var(--acc),var(--acc2));color:#06140f;font-weight:800;
+    border:none;padding:11px 20px;border-radius:11px;cursor:pointer;font-size:14.5px}
+  #go:disabled{opacity:.45;cursor:not-allowed}
+  /* resultado */
+  #out{margin-top:20px}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px;box-shadow:var(--shadow)}
+  .bar{height:8px;background:#222838;border-radius:6px;overflow:hidden;margin:12px 0 8px}
+  .bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--vio));transition:width .5s}
+  .logline{font-size:13px;color:var(--mut)}
+  .spin{display:inline-block;width:13px;height:13px;border:2px solid #333b4d;border-top-color:var(--acc2);border-radius:50%;animation:sp .9s linear infinite;margin-right:7px;vertical-align:-2px}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  video{width:100%;max-width:300px;border-radius:13px;margin-top:12px;background:#000;display:block}
+  .btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+  .pill{display:inline-flex;align-items:center;gap:7px;color:#fff;text-decoration:none;font-size:13px;font-weight:600;padding:9px 15px;border-radius:9px;border:none;cursor:pointer}
+  .pill.dl{background:linear-gradient(135deg,var(--acc),var(--acc2));color:#06140f}
+  .pill.fold{background:#2b3242}
+  .hint{font-size:11.5px;color:var(--mut);text-align:center;margin-top:14px}
 </style>
 </head>
 <body>
 <header>
   <div class="logo">🎬</div>
-  <h1>Estudio de Video IA <small>v3 · fotos con vida</small></h1>
+  <h1>Estudio de Video IA <small>v4 · constructor de escenas</small></h1>
   <span class="badge">100% LOCAL</span>
-  <span class="sub">IA anima tus fotos + voz es-MX<br>Reel 9:16 · 1:1 · 16:9</span>
+  <div id="motores">
+    <span class="chip" id="ch-sdxl">🎨 SDXL</span>
+    <span class="chip" id="ch-lip">🗣️ Lip-sync</span>
+    <span class="chip" id="ch-comfy">⚙️ GPU</span>
+  </div>
 </header>
 
-<div id="chat">
-  <div class="msg bot"><div class="av">🎬</div><div class="bub">¡Qué onda, bro! Soy tu estudio de video local renovado. 🚀
+<div class="wrap">
+  <p class="intro">Arma tu reel <b>escena por escena</b> (ilimitadas). En cada una: <b>sube una foto</b> o <b>genérala desde texto</b> 🎨, dile <b>qué movimiento</b> hace (ej: <i>"man turning into bones after he falls"</i>) o que el <b>rostro hable</b> 🗣️, y escribe la <b>narración</b> que se escucha. Lo que dejes sin narración lo reparto del texto global. <b>El audio y los subtítulos karaoke nunca se cortan.</b></p>
 
-Escribe tu idea o todo un párrafo y le pongo <b>voz en español</b> + <b>subtítulos rodantes</b>. El video ahora dura <b>exactamente lo que dura la voz</b> — narra TODO, nada se corta.
+  <div id="scenes"></div>
+  <button class="addscene" onclick="addScene()">＋ Agregar escena</button>
 
-📎 Adjunta <b>una o varias fotos</b> y la <b>IA les da vida</b> 🤪 con movimiento generado en tu GPU. <b>Todas tus fotos se animan</b>, los clips se unen y el audio jamás se corta.
-
-Elige formato (TikTok 9:16, cuadrado o YouTube 16:9) y dale ▶. Todo se guarda ordenado en tu Escritorio.</div></div>
-</div>
-
-<footer>
-  <div class="inwrap" id="drop">
-    <textarea id="texto" rows="2" placeholder="Escribe tu idea o un párrafo completo... (también puedes arrastrar o pegar fotos aquí)"></textarea>
-    <div id="thumbs"></div>
-    <div class="row">
-      <button class="tool" onclick="document.getElementById('img').click()">📎 Fotos</button>
-      <input type="file" id="img" accept="image/*" multiple style="display:none">
+  <div class="globalbox">
+    <h3>📝 Narración global (opcional)</h3>
+    <p>Si prefieres, escribe TODO el texto aquí y lo reparto por frases entre las escenas que dejaste sin narración propia.</p>
+    <textarea id="gnarr" rows="3" placeholder="Escribe aquí todo el guion... o déjalo vacío y usa la narración de cada escena."></textarea>
+    <div class="ctrls">
       <div class="seg" id="fmt">
-        <button data-f="vertical" class="on" title="TikTok / Reels / Shorts">📱 9:16</button>
-        <button data-f="cuadrado" title="Feed cuadrado">⬛ 1:1</button>
+        <button data-f="vertical" class="on" title="TikTok / Reels">📱 9:16</button>
+        <button data-f="cuadrado" title="Feed">⬛ 1:1</button>
         <button data-f="horizontal" title="YouTube">🖥️ 16:9</button>
       </div>
       <select id="voz" title="Voz">
-        <optgroup label="México">
-          <option value="es-MX-JorgeNeural">🧔 Jorge (MX)</option>
-          <option value="es-MX-DaliaNeural">👩 Dalia (MX)</option>
-        </optgroup>
-        <optgroup label="USA / España">
-          <option value="es-US-AlonsoNeural">🧔 Alonso (US)</option>
-          <option value="es-US-PalomaNeural">👩 Paloma (US)</option>
-          <option value="es-ES-AlvaroNeural">🧔 Álvaro (ES)</option>
-          <option value="es-ES-ElviraNeural">👩 Elvira (ES)</option>
-        </optgroup>
+        <optgroup label="México"><option value="es-MX-JorgeNeural">🧔 Jorge (MX)</option><option value="es-MX-DaliaNeural">👩 Dalia (MX)</option></optgroup>
+        <optgroup label="USA / España"><option value="es-US-AlonsoNeural">🧔 Alonso (US)</option><option value="es-US-PalomaNeural">👩 Paloma (US)</option><option value="es-ES-AlvaroNeural">🧔 Álvaro (ES)</option><option value="es-ES-ElviraNeural">👩 Elvira (ES)</option></optgroup>
       </select>
-      <span class="count" id="count">~0s</span>
-      <button id="send" onclick="enviar()">Generar ▶</button>
+      <button id="go" onclick="generar()">Generar reel ▶</button>
     </div>
   </div>
-  <div class="hint">La IA usa tu GPU (RTX 3070): ComfyUI tarda ~1 min la 1ra vez y ~1 min por clip. Más fotos / más texto = más clips = más tiempo.</div>
-</footer>
+
+  <div id="out"></div>
+  <div class="hint">La IA usa tu GPU (RTX 3070): ComfyUI tarda ~1 min la 1ra vez y ~1 min por clip. Más escenas = más tiempo.</div>
+</div>
 
 <script>
-const chat=document.getElementById('chat'), ta=document.getElementById('texto');
-let imgFiles=[]; let formato='vertical';
+let scenes=[]; let formato='vertical'; let sid=0;
+const $=id=>document.getElementById(id);
 
-/* ---- selector de formato ---- */
-document.querySelectorAll('#fmt button').forEach(b=>b.onclick=()=>{
-  document.querySelectorAll('#fmt button').forEach(x=>x.classList.remove('on'));
-  b.classList.add('on'); formato=b.dataset.f;
-});
-
-/* ---- archivos: input, drag&drop, pegar ---- */
-document.getElementById('img').addEventListener('change',e=>{ addFiles(e.target.files); e.target.value=''; });
-const drop=document.getElementById('drop');
-['dragenter','dragover'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();drop.classList.add('drag');}));
-['dragleave','drop'].forEach(ev=>drop.addEventListener(ev,e=>{e.preventDefault();if(ev=='drop'||e.target==drop)drop.classList.remove('drag');}));
-drop.addEventListener('drop',e=>{ if(e.dataTransfer.files.length) addFiles(e.dataTransfer.files); });
-ta.addEventListener('paste',e=>{
-  const imgs=[...(e.clipboardData.items||[])].filter(i=>i.type.startsWith('image/')).map(i=>i.getAsFile());
-  if(imgs.length){ e.preventDefault(); addFiles(imgs); }
-});
-function addFiles(list){
-  for(const f of list){ if(f && f.type.startsWith('image/')) imgFiles.push(f); }
-  renderThumbs(); estimar();
+/* ---- estado de motores ---- */
+async function motores(){
+  try{
+    const m=await(await fetch('/api/estado_motores')).json();
+    setChip('ch-sdxl', m.sdxl, '🎨 SDXL listo', '🎨 SDXL descargando…');
+    setChip('ch-lip',  m.lipsync, '🗣️ Lip-sync ON', '🗣️ Lip-sync pronto');
+    setChip('ch-comfy',m.comfy, '⚙️ GPU encendida', '⚙️ GPU dormida');
+  }catch(e){}
 }
-function renderThumbs(){
-  const box=document.getElementById('thumbs'); box.innerHTML='';
-  imgFiles.forEach((f,i)=>{
-    const d=document.createElement('div'); d.className='thumb'; d.draggable=true; d.dataset.i=i;
-    d.innerHTML=`<img src="${URL.createObjectURL(f)}"><span class="n">${i+1}</span><span class="x" title="Quitar">×</span>`;
-    d.querySelector('.x').onclick=ev=>{ev.stopPropagation();imgFiles.splice(i,1);renderThumbs();estimar();};
-    // reordenar arrastrando
-    d.addEventListener('dragstart',e=>{e.dataTransfer.setData('text',i);d.classList.add('dragging');});
-    d.addEventListener('dragend',()=>d.classList.remove('dragging'));
-    d.addEventListener('dragover',e=>e.preventDefault());
-    d.addEventListener('drop',e=>{e.preventDefault();e.stopPropagation();
-      const from=+e.dataTransfer.getData('text'), to=i;
-      if(from!==to){const m=imgFiles.splice(from,1)[0];imgFiles.splice(to,0,m);renderThumbs();}
-    });
-    box.appendChild(d);
+function setChip(id,ok,t1,t0){const c=$(id);c.textContent=ok?t1:t0;c.className='chip '+(ok?'ok':'no');}
+motores(); setInterval(motores, 8000);
+
+/* ---- escenas ---- */
+function addScene(){
+  scenes.push({id:++sid, imageMode:'upload', file:null, fileUrl:null,
+    genPrompt:'', previewId:null, previewUrl:null, busy:false,
+    animMode:'motion', motionPrompt:'', narration:''});
+  render();
+}
+function delScene(id){ scenes=scenes.filter(s=>s.id!==id); render(); }
+function dropCls(){ return formato==='cuadrado'?'sq':(formato==='horizontal'?'wide':''); }
+
+function render(){
+  const box=$('scenes'); box.innerHTML='';
+  scenes.forEach((s,i)=>{
+    const el=document.createElement('div'); el.className='scene';
+    const img = s.imageMode==='generate'
+      ? `<div class="drop ${dropCls()} ${s.previewUrl?'has':''}" id="prev-${s.id}">
+           ${s.previewUrl?`<img src="${s.previewUrl}">`:'🎨 genera la imagen abajo'}
+           ${s.busy?`<div class="ld"><span class="spin"></span>generando…</div>`:''}
+         </div>
+         <div class="genrow">
+           <input type="text" placeholder="describe la imagen (ej: a lone astronaut on mars, cinematic)" value="${esc(s.genPrompt)}" oninput="upd(${s.id},'genPrompt',this.value)">
+           <button class="mini" onclick="genImg(${s.id})">🎨 Generar imagen</button>
+         </div>`
+      : `<div class="drop ${dropCls()} ${s.fileUrl?'has':''}" onclick="pick(${s.id})">
+           ${s.fileUrl?`<img src="${s.fileUrl}">`:'📎 sube / arrastra<br>una foto'}
+         </div>`;
+    el.innerHTML=`
+      <div class="head"><div class="num">${i+1}</div><div class="ttl">Escena ${i+1}</div>
+        <button class="del" title="Quitar" onclick="delScene(${s.id})">×</button></div>
+      <div class="grid">
+        <div class="imgbox">
+          <div class="tabs">
+            <button class="${s.imageMode==='upload'?'on':''}" onclick="setMode(${s.id},'upload')">📎 Subir</button>
+            <button class="${s.imageMode==='generate'?'on':''}" onclick="setMode(${s.id},'generate')">🎨 Generar</button>
+          </div>
+          ${img}
+        </div>
+        <div class="fields">
+          <div class="animseg">
+            <button class="${s.animMode==='motion'?'on':''}" onclick="upd(${s.id},'animMode','motion')">🎬 Movimiento</button>
+            <button class="${s.animMode==='talk'?'on':''}" onclick="upd(${s.id},'animMode','talk')">🗣️ El rostro habla</button>
+          </div>
+          ${s.animMode==='motion'?`<div class="fld"><label>Qué hace la imagen (motion prompt, mejor en inglés)</label>
+            <input type="text" placeholder="man turning into bones after he falls" value="${esc(s.motionPrompt)}" oninput="upd(${s.id},'motionPrompt',this.value)"></div>`
+            :`<div class="fld"><label>El rostro de la imagen moverá los labios con la narración 🗣️</label>
+            <input type="text" placeholder="(opcional) ligero movimiento de cabeza" value="${esc(s.motionPrompt)}" oninput="upd(${s.id},'motionPrompt',this.value)"></div>`}
+          <div class="fld"><label>Narración de esta escena (lo que se escucha + subtítulo karaoke)</label>
+            <textarea rows="2" placeholder="(opcional) lo que dices en esta escena" oninput="upd(${s.id},'narration',this.value)">${esc(s.narration)}</textarea></div>
+        </div>
+      </div>`;
+    box.appendChild(el);
   });
 }
+function esc(t){return (t||'').replace(/"/g,'&quot;').replace(/</g,'&lt;');}
+function upd(id,k,v){const s=scenes.find(x=>x.id===id); if(s){s[k]=v; if(k==='animMode')render();}}
+function setMode(id,m){const s=scenes.find(x=>x.id===id); if(s){s.imageMode=m; render();}}
 
-/* ---- estimacion en vivo ---- */
-ta.addEventListener('input',()=>{ ta.style.height='auto'; ta.style.height=Math.min(ta.scrollHeight,180)+'px'; estimar(); });
-let estTimer=null;
-function estimar(){
-  clearTimeout(estTimer);
-  estTimer=setTimeout(async()=>{
-    const r=await fetch('/api/estimar',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({texto:ta.value,con_fotos:imgFiles.length>0})});
+/* ---- subir foto ---- */
+function pick(id){
+  const inp=document.createElement('input'); inp.type='file'; inp.accept='image/*';
+  inp.onchange=e=>{const f=e.target.files[0]; if(!f)return;
+    const s=scenes.find(x=>x.id===id); s.file=f; s.fileUrl=URL.createObjectURL(f); render();};
+  inp.click();
+}
+
+/* ---- generar imagen (preview) ---- */
+async function genImg(id){
+  const s=scenes.find(x=>x.id===id); if(!s) return;
+  if(!s.genPrompt.trim()){ alert('Escribe primero qué imagen quieres.'); return; }
+  s.busy=true; render();
+  try{
+    const r=await fetch('/api/genimg',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({prompt:s.genPrompt, formato})});
     const j=await r.json();
-    const c=document.getElementById('count');
-    if(imgFiles.length) c.textContent=`~${j.segundos}s · ${imgFiles.length} foto${imgFiles.length!=1?'s':''}`;
-    else c.textContent=`~${j.segundos}s · ${j.clips} clip${j.clips!=1?'s':''}`;
-  },250);
+    if(j.error){ alert(j.error); }
+    else { s.previewId=j.id; s.previewUrl=j.url+'?t='+Date.now(); }
+  }catch(e){ alert('Error generando imagen: '+e); }
+  s.busy=false; render();
 }
 
-function add(side,html,cls=''){
-  const m=document.createElement('div'); m.className='msg '+side;
-  m.innerHTML=`<div class="av">${side=='user'?'🙂':'🎬'}</div><div class="bub ${cls}">${html}</div>`;
-  chat.appendChild(m); chat.scrollTop=chat.scrollHeight; return m.querySelector('.bub');
-}
+/* ---- formato ---- */
+document.querySelectorAll('#fmt button').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('#fmt button').forEach(x=>x.classList.remove('on'));
+  b.classList.add('on'); formato=b.dataset.f; render();
+});
 
-async function enviar(){
-  const texto=ta.value.trim(); if(!texto) return;
-  const voz=document.getElementById('voz').value;
-  const send=document.getElementById('send'); send.disabled=true;
-  let uh=texto; imgFiles.forEach(f=>uh+=`<img class="ref" src="${URL.createObjectURL(f)}">`);
-  add('user',uh);
-  const myFiles=imgFiles.slice(); const myFmt=formato;
-  ta.value=''; ta.style.height='auto'; document.getElementById('count').textContent='~0s';
+/* ---- generar reel ---- */
+async function generar(){
+  if(!scenes.length){ alert('Agrega al menos una escena.'); return; }
+  const go=$('go'); go.disabled=true;
+  const fd=new FormData();
+  const cfgScenes=[]; let upIdx=0;
+  for(const s of scenes){
+    const o={anim_mode:s.animMode, motion_prompt:s.motionPrompt, narration:s.narration};
+    if(s.imageMode==='generate'){
+      if(s.previewId){ o.image_mode='preview'; o.preview_id=s.previewId; }
+      else if(s.genPrompt.trim()){ o.image_mode='generate'; o.image_prompt=s.genPrompt; }
+      else { alert(`La escena no tiene imagen. Genera o sube una.`); go.disabled=false; return; }
+    } else {
+      if(!s.file){ alert(`Una escena no tiene foto subida.`); go.disabled=false; return; }
+      o.image_mode='upload'; o.upload_index=upIdx++; fd.append('uploads', s.file);
+    }
+    cfgScenes.push(o);
+  }
+  const cfg={voz:$('voz').value, formato, global_narration:$('gnarr').value, scenes:cfgScenes};
+  fd.append('config', JSON.stringify(cfg));
 
-  const fd=new FormData(); fd.append('texto',texto); fd.append('voz',voz); fd.append('formato',myFmt);
-  myFiles.forEach(f=>fd.append('imagenes',f));
-  imgFiles=[]; renderThumbs();
-  const r=await fetch('/api/generate',{method:'POST',body:fd});
-  const j=await r.json();
-  if(j.error){ add('bot','⚠️ '+j.error); send.disabled=false; return; }
+  const out=$('out');
+  out.innerHTML=`<div class="card"><span class="prog"><span class="spin"></span>Preparando ${scenes.length} escena(s)…</span>
+    <div class="bar"><i></i></div><div class="logline"></div></div>`;
+  const bar=out.querySelector('.bar>i'), logEl=out.querySelector('.logline');
 
-  const bub=add('bot',
-    `<span class="prog"><span class="spin"></span>Preparando...</span>
-     <div class="bar"><i></i></div><div class="logline"></div>`);
-  const bar=bub.querySelector('.bar>i'), logEl=bub.querySelector('.logline');
+  let j;
+  try{ j=await(await fetch('/api/generate',{method:'POST',body:fd})).json(); }
+  catch(e){ out.innerHTML=`<div class="card">⚠️ Error de red: ${e}</div>`; go.disabled=false; return; }
+  if(j.error){ out.innerHTML=`<div class="card">⚠️ ${j.error}</div>`; go.disabled=false; return; }
+
   const job=j.job;
   const poll=setInterval(async()=>{
     const s=await(await fetch('/api/status/'+job)).json();
     const last=s.mensajes[s.mensajes.length-1]||'';
-    const pct=s.total?Math.min(95,Math.round(s.progreso/s.total*90)):8;
-    if(s.estado=='trabajando'){
-      bub.querySelector('.prog').innerHTML=`<span class="spin"></span>${s.total>1?`Clip ${s.progreso}/${s.total} · `:''}trabajando...`;
+    const pct=s.total?Math.min(95,Math.round(s.progreso/s.total*88)):8;
+    if(s.estado==='trabajando'){
+      out.querySelector('.prog').innerHTML=`<span class="spin"></span>${s.total>1?`Escena ${s.progreso}/${s.total} · `:''}trabajando…`;
       bar.style.width=pct+'%'; logEl.textContent=last;
     }
-    if(s.estado=='listo'){
-      clearInterval(poll); send.disabled=false; bar.style.width='100%';
-      bub.classList.add(myFmt);
-      bub.innerHTML=
-        `✅ <b>¡Tu video está listo!</b><br><span class="logline">${last}</span>
-         <video controls autoplay loop muted playsinline src="/api/video/${job}?t=${Date.now()}"></video>
-         <div class="btns">
-           <a class="pill dl" href="/api/video/${job}" download="video.mp4">⬇ Descargar</a>
-           <button class="pill fold" onclick="abrir('${job}',this)">📂 Abrir carpeta</button>
-         </div>`;
-      chat.scrollTop=chat.scrollHeight;
+    if(s.estado==='listo'){
+      clearInterval(poll); go.disabled=false; bar.style.width='100%';
+      out.innerHTML=`<div class="card">✅ <b>¡Tu reel está listo!</b><br><span class="logline">${last}</span>
+        <video controls autoplay loop muted playsinline src="/api/video/${job}?t=${Date.now()}"></video>
+        <div class="btns"><a class="pill dl" href="/api/video/${job}" download="reel.mp4">⬇ Descargar</a>
+        <button class="pill fold" onclick="abrir('${job}',this)">📂 Abrir carpeta</button></div></div>`;
     }
-    if(s.estado=='error'){ clearInterval(poll); send.disabled=false;
-      bub.innerHTML=`⚠️ <b>Algo falló:</b> ${s.error||'error'}<br><span class="logline">${last}</span>`; }
-  },1200);
+    if(s.estado==='error'){ clearInterval(poll); go.disabled=false;
+      out.innerHTML=`<div class="card">⚠️ <b>Algo falló:</b> ${s.error||'error'}<br><span class="logline">${last}</span></div>`; }
+  },1300);
 }
-async function abrir(job,btn){
-  btn.textContent='Abriendo...';
-  await fetch('/api/abrir/'+job,{method:'POST'});
-  btn.textContent='📂 Abrir carpeta';
-}
-ta.addEventListener('keydown',e=>{ if(e.key=='Enter'&&!e.shiftKey){e.preventDefault();enviar();} });
-estimar();
+async function abrir(job,btn){ btn.textContent='Abriendo…'; await fetch('/api/abrir/'+job,{method:'POST'}); btn.textContent='📂 Abrir carpeta'; }
+
+/* arranca con una escena */
+addScene();
 </script>
 </body>
 </html>
