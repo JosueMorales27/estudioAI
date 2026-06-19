@@ -1,0 +1,18 @@
+{
+  "prompt": {
+    "1": {"class_type": "CheckpointLoaderSimple", "inputs": {"ckpt_name": "ltx-video-2b-v0.9.5.safetensors"}},
+    "2": {"class_type": "CLIPLoader", "inputs": {"clip_name": "t5xxl_fp8_e4m3fn_scaled.safetensors", "type": "ltxv"}},
+    "3": {"class_type": "CLIPTextEncode", "inputs": {"text": "A sleek red and gold Iron Man suit standing on a skyscraper rooftop at golden hour, glowing arc reactor on the chest, camera slowly orbiting around him, wind blowing, clouds drifting in the background, cinematic lighting, ultra detailed, photorealistic, 4k", "clip": ["2", 0]}},
+    "4": {"class_type": "CLIPTextEncode", "inputs": {"text": "blurry, low quality, distorted, deformed, static, watermark, text, jpeg artifacts", "clip": ["2", 0]}},
+    "5": {"class_type": "LTXVConditioning", "inputs": {"positive": ["3", 0], "negative": ["4", 0], "frame_rate": 25}},
+    "6": {"class_type": "ModelSamplingLTXV", "inputs": {"model": ["1", 0], "max_shift": 2.05, "base_shift": 0.95}},
+    "7": {"class_type": "EmptyLTXVLatentVideo", "inputs": {"width": 768, "height": 512, "length": 97, "batch_size": 1}},
+    "8": {"class_type": "LTXVScheduler", "inputs": {"steps": 30, "max_shift": 2.05, "base_shift": 0.95, "stretch": true, "terminal": 0.1, "latent": ["7", 0]}},
+    "9": {"class_type": "KSamplerSelect", "inputs": {"sampler_name": "euler"}},
+    "10": {"class_type": "SamplerCustom", "inputs": {"model": ["6", 0], "add_noise": true, "noise_seed": 42, "cfg": 3.0, "positive": ["5", 0], "negative": ["5", 1], "sampler": ["9", 0], "sigmas": ["8", 0], "latent_image": ["7", 0]}},
+    "11": {"class_type": "VAEDecode", "inputs": {"samples": ["10", 0], "vae": ["1", 2]}},
+    "12": {"class_type": "CreateVideo", "inputs": {"images": ["11", 0], "fps": 25}},
+    "13": {"class_type": "SaveVideo", "inputs": {"video": ["12", 0], "filename_prefix": "video_ia/LTX_IronMan", "format": "mp4", "codec": "h264"}}
+  },
+  "client_id": "claude_ltx_run"
+}

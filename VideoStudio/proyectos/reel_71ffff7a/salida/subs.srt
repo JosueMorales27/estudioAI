@@ -1,0 +1,11 @@
+1
+00:00:00,000 --> 00:00:03,347
+hola me llamo bernardo y estoy muy enojado con
+
+2
+00:00:03,347 --> 00:00:05,893
+josue porque no vino a trabajar hoy
+
+3
+00:00:05,893 --> 00:00:06,984
+jajajajajaja XD
