@@ -1,0 +1,4 @@
+1
+00:00:00,100 --> 00:00:07,987
+Hola, soy tu estudio de video con inteligencia artificial, funcionando al cien por ciento en tu computadora, sin pagar nada.
+

@@ -1,0 +1,2 @@
+file 'C:/AI/VideoStudio/proyectos/reel_dd378c96/salida/escena_001.mp4'
+file 'C:/AI/VideoStudio/proyectos/reel_dd378c96/salida/escena_002.mp4'

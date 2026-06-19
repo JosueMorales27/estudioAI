@@ -1,0 +1,59 @@
+[Script Info]
+ScriptType: v4.00+
+WrapStyle: 0
+ScaledBorderAndShadow: yes
+PlayResX: 1080
+PlayResY: 1920
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Sub,Arial,48,&H00FFFFFF,&H0000D7FF,&H00101010,&H64000000,1,0,0,0,100,100,0,0,1,3,1,2,75,75,211,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:00.14,Sub,,0,0,0,,la
+Dialogue: 0,0:00:00.14,0:00:00.57,Sub,,0,0,0,,la verdad
+Dialogue: 0,0:00:00.57,0:00:00.72,Sub,,0,0,0,,la verdad me
+Dialogue: 0,0:00:00.72,0:00:01.22,Sub,,0,0,0,,la verdad me encanta
+Dialogue: 0,0:00:01.22,0:00:01.58,Sub,,0,0,0,,la verdad me encanta poner
+Dialogue: 0,0:00:01.58,0:00:02.25,Sub,,0,0,0,,coachings
+Dialogue: 0,0:00:02.25,0:00:02.39,Sub,,0,0,0,,coachings a
+Dialogue: 0,0:00:02.39,0:00:02.53,Sub,,0,0,0,,coachings a lo
+Dialogue: 0,0:00:02.53,0:00:03.05,Sub,,0,0,0,,coachings a lo pendejo
+Dialogue: 0,0:00:03.05,0:00:03.19,Sub,,0,0,0,,coachings a lo pendejo ,
+Dialogue: 0,0:00:03.19,0:00:03.21,Sub,,0,0,0,,coachings a lo pendejo , no
+Dialogue: 0,0:00:03.21,0:00:03.59,Sub,,0,0,0,,tengo
+Dialogue: 0,0:00:03.59,0:00:03.89,Sub,,0,0,0,,tengo nada
+Dialogue: 0,0:00:03.89,0:00:04.12,Sub,,0,0,0,,tengo nada que
+Dialogue: 0,0:00:04.12,0:00:04.50,Sub,,0,0,0,,tengo nada que hacer
+Dialogue: 0,0:00:04.50,0:00:04.64,Sub,,0,0,0,,tengo nada que hacer y
+Dialogue: 0,0:00:04.64,0:00:04.73,Sub,,0,0,0,,tengo nada que hacer y me
+Dialogue: 0,0:00:04.73,0:00:05.14,Sub,,0,0,0,,aburro
+Dialogue: 0,0:00:05.14,0:00:05.76,Sub,,0,0,0,,aburro alaverga,
+Dialogue: 0,0:00:05.76,0:00:05.90,Sub,,0,0,0,,aburro alaverga, me
+Dialogue: 0,0:00:05.90,0:00:06.24,Sub,,0,0,0,,aburro alaverga, me llamo
+Dialogue: 0,0:00:06.24,0:00:06.85,Sub,,0,0,0,,bernardo
+Dialogue: 0,0:00:06.85,0:00:06.99,Sub,,0,0,0,,bernardo y
+Dialogue: 0,0:00:06.99,0:00:07.14,Sub,,0,0,0,,bernardo y si
+Dialogue: 0,0:00:07.14,0:00:07.44,Sub,,0,0,0,,bernardo y si eres
+Dialogue: 0,0:00:07.44,0:00:07.82,Sub,,0,0,0,,bernardo y si eres morra
+Dialogue: 0,0:00:07.82,0:00:07.97,Sub,,0,0,0,,bernardo y si eres morra ya
+Dialogue: 0,0:00:07.97,0:00:08.06,Sub,,0,0,0,,bernardo y si eres morra ya te
+Dialogue: 0,0:00:08.06,0:00:08.63,Sub,,0,0,0,,salvaste
+Dialogue: 0,0:00:08.63,0:00:08.91,Sub,,0,0,0,,salvaste pero
+Dialogue: 0,0:00:08.91,0:00:09.05,Sub,,0,0,0,,salvaste pero si
+Dialogue: 0,0:00:09.05,0:00:09.33,Sub,,0,0,0,,salvaste pero si eres
+Dialogue: 0,0:00:09.33,0:00:09.76,Sub,,0,0,0,,salvaste pero si eres hombre
+Dialogue: 0,0:00:09.76,0:00:09.91,Sub,,0,0,0,,me
+Dialogue: 0,0:00:09.91,0:00:10.14,Sub,,0,0,0,,me voy
+Dialogue: 0,0:00:10.14,0:00:10.28,Sub,,0,0,0,,me voy a
+Dialogue: 0,0:00:10.28,0:00:10.73,Sub,,0,0,0,,me voy a portar
+Dialogue: 0,0:00:10.73,0:00:11.04,Sub,,0,0,0,,me voy a portar bien
+Dialogue: 0,0:00:11.04,0:00:11.41,Sub,,0,0,0,,me voy a portar bien mamon
+Dialogue: 0,0:00:11.41,0:00:11.58,Sub,,0,0,0,,me voy a portar bien mamon por
+Dialogue: 0,0:00:11.58,0:00:11.81,Sub,,0,0,0,,que
+Dialogue: 0,0:00:11.81,0:00:12.04,Sub,,0,0,0,,que soy
+Dialogue: 0,0:00:12.04,0:00:12.27,Sub,,0,0,0,,que soy gay
+Dialogue: 0,0:00:12.27,0:00:12.41,Sub,,0,0,0,,que soy gay y
+Dialogue: 0,0:00:12.41,0:00:12.71,Sub,,0,0,0,,que soy gay y mamo
+Dialogue: 0,0:00:12.71,0:00:13.03,Sub,,0,0,0,,que soy gay y mamo verga

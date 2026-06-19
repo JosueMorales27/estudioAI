@@ -1,0 +1,5 @@
+file 'C:/AI/VideoStudio/proyectos/reel_72e3fb0a/clips/clip_001.mp4'
+file 'C:/AI/VideoStudio/proyectos/reel_72e3fb0a/clips/clip_002.mp4'
+file 'C:/AI/VideoStudio/proyectos/reel_72e3fb0a/clips/clip_003.mp4'
+file 'C:/AI/VideoStudio/proyectos/reel_72e3fb0a/clips/clip_004.mp4'
+file 'C:/AI/VideoStudio/proyectos/reel_72e3fb0a/clips/clip_005.mp4'

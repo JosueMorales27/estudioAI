@@ -1,0 +1,35 @@
+# === Repo de trabajo: Estudio de Video IA (C:\AI) ===
+# Solo versionamos NUESTRO codigo. El motor y la salida quedan fuera.
+
+# Motor de IA / modelos (enorme ~51GB, reinstalable — NO es nuestro codigo)
+ComfyUI_windows_portable/
+ComfyUI*/
+*.7z
+*.safetensors
+*.ckpt
+*.pth
+*.gguf
+*.onnx
+
+# Respaldos locales (no anidar repos)
+_backups/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+
+# Runtime / logs / temporales
+*.pid
+*.log
+*.tmp
+
+# Media renderizada (salida reproducible de la RTX 3070)
+*.mp4
+*.mp3
+*.wav
+*.avi
+*.mov
+*.mkv
